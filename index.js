@@ -1,6 +1,9 @@
 var cool = require('cool-ascii-faces');
 var express = require('express');
+var bodyParser = require('body-parser')
+
 var app = express();
+app.use(bodyParser.urlencoded({extended: true}));
 
 // add mongoose
 var mongoose = require('mongoose');
@@ -8,46 +11,31 @@ mongoose.connect('mongodb://heroku_qgxgxvd5:rd36qa6741uts9agflu7vqgpsr@ds161551.
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-var kitties = db.once('open',function() {
-	var userSchema = mongoose.Schema( {
-		name: String
-	});
+db.once('open',function() {
+	var Schema = mongoose.Schema;
+	var userSchema = new Schema( {
+		username: String,
+		password: String,
+		skills: [String]
+	})
 
-	userSchema.methods.speak = function () {
-		var greeting = this.name 
-			? "Meow name is " + this.name
-			: "I am nameless";
-		console.log(greeting);
-	}
-
+	userSchema.statics.findByName = function(name, cb) {
+		return this.find({name: new RegExp(name, 'i')}, cb);
+	};
+    
+    
 	var User = mongoose.model('User', userSchema);
-
-	var silence = new User({ name: 'Silence' });
-	console.log(silence.name);
-	// we're connected! 
-
-	var fluffy = new User({ name: 'floof'});
-	fluffy.speak();
-
-	var buffy = new User({name: 'notmyname'});
-	buffy.save(function(err,buffy) {
-		if (err) return console.error(err);
-		buffy.speak();
-	})
-
-	fluffy.save(function (err, fluffy) {
-		if (err) return console.error(err);
-		fluffy.speak();
-	})
-
-	User.find(function (err, users) {
-		if (err) return console.error(err);
-		console.log(users);
-	})
-	User.find({name: 'notmyname'}, kitties);
+    
+    var user1 = new User({ username: 'bob'});
+    
+    User.findByName('bob', function(err, users) {
+        console.log(users);
+    })
 })
 
-console.log(kitties);
+//set up schemas
+
+
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -58,12 +46,31 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/', function(request, response) {
-  response.render('pages/index');
+    var cursor = db.collection('quotes').find();
+    db.collection('quotes').find().toArray(function(err, results) {
+        console.log(results)
+    })
+    response.render('pages/index');
 });
 
 app.get('/cool', function(request, response) {
-  response.send(cool());
+    response.send(cool());
 });
+
+app.post('/register', function(req, res) {
+    console.log("SUG");
+    console.log(req.body);
+    res.send(cool());
+})
+
+app.post('/quotes', (req, res) => {
+  db.collection('quotes').save(req.body, (err, result) => {
+    if (err) return console.log(err)
+
+    console.log('saved to database')
+    res.redirect('/')
+  })
+})
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
