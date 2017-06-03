@@ -12,25 +12,8 @@ mongoose.connect('mongodb://heroku_qgxgxvd5:rd36qa6741uts9agflu7vqgpsr@ds161551.
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open',function() {
-	var Schema = mongoose.Schema;
-	var userSchema = new Schema( {
-		username: String,
-		password: String,
-		skills: [String]
-	})
 
-	userSchema.statics.findByName = function(name, cb) {
-		return this.find({name: new RegExp(name, 'i')}, cb);
-	};
     
-    
-	var User = mongoose.model('User', userSchema);
-    
-    var user1 = new User({ username: 'bob'});
-    
-    User.findByName('bob', function(err, users) {
-        console.log(users);
-    })
 })
 
 //set up schemas
@@ -57,10 +40,53 @@ app.get('/cool', function(request, response) {
     response.send(cool());
 });
 
+app.get('/login', function(request, response) {
+    response.render('pages/login');
+})
+
+// tries to register user
+// if you fail, kicks you to re-registration page with error alert
 app.post('/register', function(req, res) {
-    console.log("SUG");
-    console.log(req.body);
-    res.send(cool());
+    if (!req.body.password) {
+        var error = "FOOL: NO PASSWORD"
+        res.render('pages/index.ejs', {message: error});
+    } else {
+        db.collection('users').save(req.body, (err, result) => {
+            if (err) return console.log(err);
+            console.log('saved to database')
+            console.log(req.body);
+            res.redirect('/login')
+        })
+    }
+})
+
+// tries to log the user in
+app.post('/login', function( req, res ) {
+    console.log(req.body.username);
+    var user = db.collection('users').find({ username: req.body.username}).toArray(function(err, result) {
+        if (err) return;
+        if (result.length===0) {
+            // USER NOT FOUND
+            console.log("USER NOT FOUND")
+            var error = "User not found";
+            res.render('pages/login', {message: error})
+        } else if (result[0].password!=req.body.password) {
+            // WRONG PASS
+            console.log("WRONG PASSWORD");
+            var error = "Wrong Password";
+            res.render('pages/login', {message: error})
+        } else {
+            // SUCCESS
+            console.log("SUCCESSFUL LOGIN");
+            res.render('pages/volunteer');
+        }
+    });
+//            
+//            if (req.body.password === user[0].password) {
+//                console.log("SUCCESS");
+//            } else {
+//                console.log("FAILURE");
+//            }
 })
 
 app.post('/quotes', (req, res) => {
