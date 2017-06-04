@@ -1,7 +1,8 @@
 
 var cool = require('cool-ascii-faces');
 var express = require('express');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var path = require("path");
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
@@ -41,6 +42,21 @@ app.get('/', function(request, response) {
     })
     response.render('pages/index');
 });
+
+// app.get('/server/data/map.js', function(request, response) {
+// 	response.
+// })
+app.get('/server/res/pot0.png', function (req, res) {
+    res.sendfile(path.resolve(path.resolve(__dirname,'./server/res/maplv1.png')));
+}); 
+
+app.get('/server/res/pot1.png', function (req, res) {
+    console.log("GRABBING PIC");
+    res.sendfile(path.resolve(path.resolve(__dirname,'./server/res/maplv2.png')));
+}); 
+app.get('/server/res/pot2.png', function (req, res) {
+    res.sendfile(path.resolve(path.resolve(__dirname,'./server/res/maplv3.png')));
+}); 
 
 app.get('/map', function(request, response) {
     //response.render('pages/map', {key:JSON.stringify(app.get('google_maps_api_key'))});

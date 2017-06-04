@@ -33,13 +33,148 @@
         console.log(source);
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -34.397, lng: 150.644},
-                zoom: 8
+                center: {lat: 39.749017, lng: -75.546201},
+                zoom: 14
             });
             //load eligible areas using geoJson
             //map.data.loadGeoJson("http://data-cacfp-sfsp.opendata.arcgis.com/datasets/8f9699f00a274314823fcb832581b7cf_0.geojson");
             //map.data.loadGeoJson('https://storage.googleapis.com/mapsdevsite/json/google.json');
-            map.data.addGeoJson(data);
+            //map.data.addGeoJson(data);
+            
+            var sodaUrl = "https://data.delaware.gov/resource/72wj-gmav.json";
+            var array = [];
+            var length;
+            var b = $.getJSON(sodaUrl, function(rawData) {
+                for (var i=0; i<rawData.length; i+=2) {
+                    if (rawData[i+1] && rawData[i]) {
+                        if (rawData[i+1].schoolname!=rawData[i].schoolname) {
+            //                console.log ("YOU MESSED UP");
+            //                console.log (rawData[i+1].schoolname);
+            //                console.log (rawData[i].schoolname);
+            //                console.log ("----");
+                            i=i-1;
+                        } else {
+                            if (rawData[i+1].studentcount/rawData[i].studentcount > 0.5) {
+                                //console.log(rawData[i+1].schoolname);
+                                //console.log(rawData[i+1].studentcount/rawData[i].studentcount);
+                                array.push(rawData[i+1]);
+                            }
+                        }
+                    }
+                }
+                array.forEach(function(obj) { obj.lat = 0; obj.lng=0; });
+                console.log(array.length);
+
+//                length = array.length;
+                            //console.log(array);
+            //console.log(Object.keys(array).length);
+            //console.log(length);
+
+            })
+
+
+            var directoryUrl = "https://data.delaware.gov/resource/2efz-9zk3.json";
+            var schools = $.getJSON(directoryUrl, function(school) {
+            //    console.log("AHAHHAHAHAHA");
+            //    console.log(school.length);
+                for(var j=0; j<school.length; j++) {
+                    //console.log(j);
+                    //console.log(school[j].schoolname);
+                       for (let k=0; k<array.length;k++) {
+                           if (school[j].schoolname==array[k].schoolname) {
+                               //console.log("FOUND");
+                               array[k].lat = school[j].geocoded_location.latitude;
+                               array[k].lng = school[j].geocoded_location.longitude;
+                               
+                               //console.log(school[j].geocoded_location);
+                           }
+                       }
+                }
+                
+                for (var loc=0; loc < array.length; loc++) {
+                    (function() {
+                        var myLat = parseFloat(array[loc].lat);
+                        var myLng = parseFloat(array[loc].lng);
+                        var myLatLng = {lat: myLat, lng: myLng};
+                        console.log(myLatLng);
+                        var image;
+                        var shape;
+                        if (loc%2==0) {
+                            image = {url: "/server/res/pot0.png"};
+                            shape = {
+                                coords: [0,0,40,40],
+                                type: 'rect'
+                            };
+                        } else if (loc%3==0) {
+                            image = {url: "/server/res/pot1.png"};
+                            shape = {
+                                coords: [0,0,30,51],
+                                type: 'rect'
+                            };
+                        } else {
+                            image = {url: "/server/res/pot2.png"};
+                            shape = {
+                                coords: [0,0,30,50],
+                                type: 'rect'
+                            };
+                        }
+
+                        var marker = new google.maps.Marker({
+                          position: myLatLng,
+                          map: map,
+                            icon:image,
+                            shape:shape,
+                          title: 'Hello World!',
+                            zIndex: 50,
+                            clickable: true
+                        });
+
+                        let contentString = '<div id="content">'+
+                '<div id="siteNotice">'+
+                '</div>'+
+                '<h3 id="firstHeading" class="firstHeading">'+array[loc].schoolname+'</h3>'+
+                '<div id="bodyContent">'+
+                '<p><b>Volunteer hours</b>: M <b>T</b> W <b>R</b> F S U</p>'+
+                '<p>    T: 5:00PM - 8:00PM </p>'+
+                '<p>    R: 5:00PM - 8:00PM </p>'+
+                '<p><b>Services Needed</b>: </p>'+ '<p><ul><li>Summer Meal Program</li><li>Web developer</li>'
+                + '</ul>  </p>' + '<ul class="pager"><li>' +
+                            '<button style="display: flex; justify-content: center;" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span>  Volunteer </button>'+
+                '</li></ul>' +
+                '</div>'+
+                '</div>';
+
+                        marker.info = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+                        let clicks=0;
+                        marker.addListener('click', function() {
+                            console.log(marker)
+                            if (clicks%2===0) {
+                                marker.info.open(map, marker);
+                            } else {
+                                marker.info.close(map, marker);
+                                if (marker.icon.url === "/server/res/pot0.png") {
+                                    marker.setVisible(false);
+                                    image = "/server/res/pot1.png";
+                                    marker = new google.maps.Marker({
+                                      position: myLatLng,
+                                      map: map,
+                                        icon:image,
+                                        shape:shape,
+                                      title: 'Hello World!',
+                                        zIndex: 60
+                                    });
+                            }
+                            }
+                            clicks++;
+
+                        });
+                    })();
+                     }
+            })
+            
+           
         }
         
         
