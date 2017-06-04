@@ -1,3 +1,4 @@
+
 var cool = require('cool-ascii-faces');
 var express = require('express');
 var bodyParser = require('body-parser')
@@ -28,6 +29,11 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
+//support for setting custom configs and using api keys
+var envs = require('envs');
+app.set('environment', envs('NODE_ENV', 'production'));
+app.set('google_maps_api_key', envs('GOOGLE_MAPS_API_KEY'));
+
 app.get('/', function(request, response) {
     var cursor = db.collection('quotes').find();
     db.collection('quotes').find().toArray(function(err, results) {
@@ -37,8 +43,10 @@ app.get('/', function(request, response) {
 });
 
 app.get('/map', function(request, response) {
-    response.render('pages/map');
+    //response.render('pages/map', {key:JSON.stringify(app.get('google_maps_api_key'))});
+    response.render('pages/map', {key:app.get('google_maps_api_key')});
 })
+
 
 app.get('/cool', function(request, response) {
     response.send(cool());
