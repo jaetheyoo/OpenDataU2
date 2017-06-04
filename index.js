@@ -22,7 +22,7 @@ db.once('open',function() {
 
 
 
-app.set('port', (process.env.PORT || 5000));
+//app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
 
@@ -30,10 +30,10 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
-//support for setting custom configs and using api keys
-var envs = require('envs');
-app.set('environment', envs('NODE_ENV', 'production'));
-app.set('google_maps_api_key', envs('GOOGLE_MAPS_API_KEY'));
+////support for setting custom configs and using api keys
+//var envs = require('envs');
+//app.set('environment', envs('NODE_ENV', 'production'));
+//app.set('google_maps_api_key', envs('GOOGLE_MAPS_API_KEY'));
 
 app.get('/', function(request, response) {
     // var cursor = db.collection('quotes').find();
