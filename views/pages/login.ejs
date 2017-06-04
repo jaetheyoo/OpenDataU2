@@ -1,76 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <% include ../partials/header.ejs %>
+    <meta charset="utf-8">
+    <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+    <title>Sign In page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <style type="text/css">
+
+    </style>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-
-  <% include ../partials/nav.ejs %>
-
-<div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="/lang-logo.png">
-    </a>
-    <h1>LOGIN</h1>
-    <a type="button" class="btn btn-lg btn-default" href="https://devcenter.heroku.com/articles/getting-started-with-nodejs"><span class="glyphicon glyphicon-flash"></span> Getting Started with Node</a>
-    <a type="button" class="btn btn-lg btn-primary" href="https://github.com/heroku/node-js-getting-started"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
-  </div>
-</div>
-<form id="loginformA" action="/login" method="POST">
     <div>
-        <label for="username">Username: </label>
-        <input type="text" id="username" name="username"></input>
-        <label for="password">Password: </label>
-        <input type="password" name="password"></input>
+        <img src="img/power-of-volunteerism.jpg" width=100% height=25%/>
     </div>
-<input type="submit" value="Submit"></input>
-</form>
+    <div class="hero-unit">
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <div class="span5">
+                        <div class="area">
+                            <form class="form-horizontal" action="/login" method="POST">
+                                <div class="heading">
+                                    <h3 class="breadcrumb">Volunteer Sign In</h3>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label" for="inputEmailAddress">Username:</label>
+
+                                    <div class="controls">
+                                        <input id="username" type="text" name="username">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label" for="inputPassword">Password</label>
+
+                                    <div class="controls">
+                                        <input id="password" type="password" name="password">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <label class="checkbox">
+                                    <input type="checkbox">
+                                        Keep me signed in
+                                    </label>
+                                        <button class="btn btn-success" type="submit">Sign In</button>
+                                        <button class="btn btn-danger" type="button">Register</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="span6">
+                        <div class="area">
+                            <form class="form-horizontal">
+                                <div class="heading">
+                                    <h3 class="breadcrumb">Hunger Relief Organization Sign In</h3>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="inputEmailAddress">Email address</label>
+                                    <div class="controls">
+                                        <input id="inputUsername" type="text">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="inputPassword">Password</label>
+                                    <div class="controls">
+                                        <input id="inputPassword" type="password">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <label class="checkbox">
+                                    <input type="checkbox">
+                                        Keep me signed in
+                                    </label>
+                                        <button class="btn btn-success" type="submit">Sign Up</button>
+                                        <button class="btn btn-danger" type="button">Register</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
 <div class="container">
   <div class="alert alert-info text-center" role="alert">
   <% if (!message) {%>
       <% var message = "" }%>    
   <span><%= message %></span>
   </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-info-sign"></span> How this sample app works</h3>
-      <ul>
-        <li>This app was deployed to Heroku, either using Git or by using <a href="https://github.com/heroku/node-js-getting-started">Heroku Button</a> on the repository.</li>
-
-        <li>When Heroku received the source code, it fetched all the dependencies in the <a href="https://github.com/heroku/node-js-getting-started/blob/master/package.json">package.json</a>, creating a deployable slug.</li>
-        <li>The platform then spins up a dyno, a lightweight container that provides an isolated environment in which the slug can be mounted and executed.</li>
-        <li>You can scale your app, manage it, and deploy over <a href="https://addons.heroku.com/">150 add-on services</a>, from the Dashboard or CLI.</li>
-      </ul>
+        </div>
+        <script type="text/javascript">
+        </script>
     </div>
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-link"></span> Next Steps</h3>
-      <ul>
-        <li>If you are following the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started</a> guide, then please head back to the tutorial and follow the next steps!</li>
-        <li>If you deployed this app by deploying the Heroku Button, then in a command line shell, run:</li>
-        <ul>
-          <li><code>git clone https://github.com/heroku/node-js-getting-started.git</code> - this will create a local copy of the source code for the app</li>
-          <li><code>cd node-js-getting-started</code> - change directory into the local source code repository</li>
-          <li><code>heroku git:remote -a &lt;your-app-name></code> - associate the Heroku app with the repository</li>
-          <li>You'll now be set up to run the app locally, or <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs#push-local-changes">deploy changes</a> to Heroku</li>
-        </ul>
-      </ul>
-      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
-      <ul>
-        <li><a href="https://www.heroku.com/home">Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started with Node on Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/deploying-nodejs">Deploying Node Apps on Heroku</a></li>
-      </ul>
-    </div>
-  </div> <!-- row -->
-   <div class="alert alert-info text-center" role="alert">
-    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
-  </div>
-</div>
-
-
 </body>
+
 </html>

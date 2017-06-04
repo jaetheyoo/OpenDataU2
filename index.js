@@ -36,10 +36,10 @@ app.set('environment', envs('NODE_ENV', 'production'));
 app.set('google_maps_api_key', envs('GOOGLE_MAPS_API_KEY'));
 
 app.get('/', function(request, response) {
-    var cursor = db.collection('quotes').find();
-    db.collection('quotes').find().toArray(function(err, results) {
-        console.log(results)
-    })
+    // var cursor = db.collection('quotes').find();
+    // db.collection('quotes').find().toArray(function(err, results) {
+    //     console.log(results)
+    // })
     response.render('pages/index');
 });
 
